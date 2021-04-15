@@ -3,7 +3,7 @@ package strategy
 import "fmt"
 
 type FlyBehavior interface {
-	FLy()
+	Fly()
 }
 
 type Duck struct {
@@ -15,8 +15,8 @@ func (d *Duck) Display() {
 	fmt.Printf("I'm %v", d.Name)
 }
 
-func (d *Duck) performFly() {
-	d.flyBehavior.FLy()
+func (d *Duck) PerformFly() {
+	d.flyBehavior.Fly()
 }
 
 type FlyWithWings struct{}
