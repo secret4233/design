@@ -1,7 +1,11 @@
 package observer
 
-import "fmt"
+import (
+	"fmt"
+	"math/rand"
+)
 
+// 主题
 type Subject interface {
 	Attach(Observer)
 	Remove(Observer)
@@ -11,11 +15,12 @@ type Subject interface {
 type WeatherSubject struct {
 	observers   []Observer
 	temperature float64
+	pressure    float64
 }
 
 var _ Subject = (*WeatherSubject)(nil)
 
-func NewSubject() *WeatherSubject {
+func NewWeatherSubject() *WeatherSubject {
 	return &WeatherSubject{
 		observers: make([]Observer, 0),
 	}
@@ -45,15 +50,31 @@ func (s *WeatherSubject) Notify() {
 	}
 }
 
+func (s *WeatherSubject) SetValues() {
+	s.pressure = rand.Float64()
+	s.temperature = rand.Float64()
+	s.Notify()
+}
+
+// 观察者
 type Observer interface {
 	Update(Subject)
 }
 
-var _ Observer = (*temperaturerObserver)(nil)
+var _ Observer = (*TemperaturerObserver)(nil)
 
-type temperaturerObserver struct {
+type TemperaturerObserver struct {
 }
 
-func (w *temperaturerObserver) Update(s Subject) {
-	fmt.Printf("now temperature is:%v", s.(*WeatherSubject).temperature)
+func (w *TemperaturerObserver) Update(s Subject) {
+	fmt.Printf("now temperature is:%v\n", s.(*WeatherSubject).temperature)
+}
+
+type PressureObserver struct {
+}
+
+var _ Observer = (*PressureObserver)(nil)
+
+func (p *PressureObserver) Update(s Subject) {
+	fmt.Printf("now pressure is:%v\n", s.(*WeatherSubject).pressure)
 }
